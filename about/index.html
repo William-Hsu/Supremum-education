@@ -41,10 +41,11 @@
     <div class="about-grid">
         <div class="about-image-wrap reveal">
             <div class="about-frame">
-                <img src="../headshot.jpg" alt="William Hsu" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                <div class="about-placeholder" style="display:none;">
+                <img src="../headshot.jpg" alt="William Hsu"
+                     onerror="this.src='../headshot.jpeg'; this.onerror=function(){ this.style.display='none'; document.getElementById('headshot-placeholder').style.display='flex'; }">
+                <div id="headshot-placeholder" class="about-placeholder" style="display:none;">
                     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.3"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                    <span style="opacity:0.35;font-size:0.75rem;">headshot.jpg</span>
+                    <span style="opacity:0.35;font-size:0.75rem;">Add headshot.jpg to repo root</span>
                 </div>
             </div>
             <div class="about-badge">
