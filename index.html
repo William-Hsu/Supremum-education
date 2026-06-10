@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supremum Education | Tutoring & Academic Services</title>
+    <meta name="description" content="Expert tutoring in Mathematics and Economics — high school through university. Based in Mississauga, Ontario.">
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+    /* ── Critical feature styles (inlined to avoid stale-CSS issues) ── */
+
+    /* Self-drawing curve */
+    .supremum-path {
+        stroke-dasharray: 1400;
+        stroke-dashoffset: 1400;
+        animation: drawCurve 2.8s cubic-bezier(0.22,0.8,0.3,1) 0.6s forwards;
+    }
+    @keyframes drawCurve { to { stroke-dashoffset: 0; } }
+
+    .ceiling-line { opacity: 0; animation: fadeCeiling 0.8s ease 2.6s forwards; }
+    @keyframes fadeCeiling { to { opacity: 1; } }
+
+    .curve-dot { animation: dotPulse 2.2s ease-in-out 3.6s infinite; }
+    @keyframes dotPulse {
+        0%, 100% { r: 5; opacity: 1; }
+        50%      { r: 8; opacity: 0.7; }
+    }
+
+    .curve-marker { opacity: 0; }
+    .curve-marker.m1 { animation: markerPop 0.5s ease 2.0s forwards; }
+    .curve-marker.m2 { animation: markerPop 0.5s ease 3.1s forwards; }
+    @keyframes markerPop { to { opacity: 1; } }
+
+    /* Annotation cards */
+    .hero-annotation {
+        position: absolute;
+        background: rgba(255,255,255,0.92);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(201,168,76,0.35);
+        border-radius: 10px;
+        padding: 0.65rem 0.95rem;
+        box-shadow: 0 4px 24px rgba(27,43,110,0.08), 0 0 0 4px rgba(201,168,76,0.06);
+        z-index: 3; opacity: 0; pointer-events: none;
+    }
+    .anno-1 { right: 36%; top: 44%;
+        animation: annoIn 0.7s cubic-bezier(0.16,1,0.3,1) 2.2s forwards,
+                   annoFloat 5s ease-in-out 3s infinite; }
+    .anno-2 { right: 6%; top: 21%;
+        animation: annoIn 0.7s cubic-bezier(0.16,1,0.3,1) 3.3s forwards,
+                   annoFloat 5s ease-in-out 4.2s infinite reverse; }
+    .anno-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.18em;
+        color: #C9A84C; margin-bottom: 0.15rem; }
+    .anno-text  { font-size: 0.8rem; font-weight: 600; color: #1D1D1F; white-space: nowrap; }
+    @keyframes annoIn {
+        from { opacity: 0; transform: translateY(12px) scale(0.95); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes annoFloat {
+        0%, 100% { transform: translateY(0); }
+        50%      { transform: translateY(-6px); }
+    }
+
+    /* Subject ticker */
+    .ticker-strip {
+        background: #FFFFFF;
+        border-bottom: 1px solid rgba(0,0,0,0.06);
+        overflow: hidden; padding: 1.1rem 0; position: relative;
+    }
+    .ticker-strip::before, .ticker-strip::after {
+        content: ''; position: absolute; top: 0; bottom: 0; width: 120px;
+        z-index: 2; pointer-events: none;
+    }
+    .ticker-strip::before { left: 0;  background: linear-gradient(90deg, #FFFFFF, transparent); }
+    .ticker-strip::after  { right: 0; background: linear-gradient(-90deg, #FFFFFF, transparent); }
+    .ticker-track {
+        display: flex; align-items: center; gap: 2.5rem;
+        width: max-content; flex-wrap: nowrap; white-space: nowrap;
+        animation: tickerScroll 30s linear infinite;
+    }
+    .ticker-track span {
+        font-size: 0.8rem; font-weight: 500;
+        letter-spacing: 0.14em; text-transform: uppercase;
+        color: #86868B; white-space: nowrap;
+    }
+    .ticker-track .tick-dot { color: #C9A84C; font-size: 1rem; }
+    .ticker-strip:hover .ticker-track { animation-play-state: paused; }
+    @keyframes tickerScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    @media (max-width: 960px) {
+        .hero-annotation { display: none; }
+        .ticker-strip { padding: 0.85rem 0; }
+        .ticker-track span { font-size: 0.7rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .supremum-path { animation: none; stroke-dashoffset: 0; }
+        .ceiling-line, .curve-marker, .hero-annotation { animation: none; opacity: 1; }
+        .curve-dot, .ticker-track { animation: none; }
+    }
+    </style>
+</head>
+<body>
+
+<div id="scroll-progress"></div>
+
+<nav id="navbar">
+    <div class="nav-logo">
+        <a href="/"><img src="logo.png" alt="Supremum Education"></a>
+    </div>
+    <ul class="nav-links">
+        <li><a href="/" class="active">Home</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/pricing/">Pricing</a></li>
+        <li><a href="#contact" class="nav-cta">Book free trial</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+    <!-- Instrumented supremum curve -->
+    <svg class="hero-svg" viewBox="0 0 600 800" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <defs>
+            <pattern id="dotGrid" x="0" y="0" width="26" height="26" patternUnits="userSpaceOnUse">
+                <circle cx="1.5" cy="1.5" r="1.5" fill="rgba(27,43,110,0.07)"/>
+            </pattern>
+        </defs>
+
+        <!-- Dot grid backdrop -->
+        <rect x="60" y="40" width="540" height="720" fill="url(#dotGrid)"/>
+
+        <!-- Asymptote ceiling -->
+        <line class="ceiling-line" x1="0" y1="130" x2="600" y2="130"
+              stroke="rgba(201,168,76,0.4)" stroke-width="1" stroke-dasharray="10 7"/>
+        <text x="20" y="116" fill="rgba(201,168,76,0.55)" font-family="Georgia,serif"
+              font-size="20" font-style="italic">L</text>
+
+        <!-- Layered glow: three stacked strokes fake a bloom that works on white -->
+        <path class="supremum-path glow-wide"
+              d="M-40 800 Q80 550 220 320 Q360 160 640 132"
+              stroke="rgba(201,168,76,0.10)" stroke-width="16" fill="none" stroke-linecap="round"/>
+        <path class="supremum-path glow-mid"
+              d="M-40 800 Q80 550 220 320 Q360 160 640 132"
+              stroke="rgba(201,168,76,0.22)" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <path id="supremumPath" class="supremum-path"
+              d="M-40 800 Q80 550 220 320 Q360 160 640 132"
+              stroke="rgba(201,168,76,0.85)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+        <!-- Marker dots pinned to the curve -->
+        <circle class="curve-marker m1" cx="220" cy="320" r="4.5"
+                fill="#FFFFFF" stroke="#C9A84C" stroke-width="2"/>
+        <circle class="curve-marker m2" cx="520" cy="146" r="4.5"
+                fill="#FFFFFF" stroke="#C9A84C" stroke-width="2"/>
+
+        <!-- Traveling dot -->
+        <circle class="curve-dot" r="5" fill="#C9A84C">
+            <animateMotion dur="2.8s" begin="0.6s" fill="freeze"
+                           rotate="0" keyPoints="0;1" keyTimes="0;1"
+                           calcMode="spline" keySplines="0.22 0.8 0.3 1">
+                <mpath href="#supremumPath"/>
+            </animateMotion>
+        </circle>
+    </svg>
+
+    <!-- Annotation cards pinned to curve points -->
+    <div class="hero-annotation anno-1">
+        <div class="anno-label">SESSION 1</div>
+        <div class="anno-text">Diagnose the gaps</div>
+    </div>
+    <div class="hero-annotation anno-2">
+        <div class="anno-label">THE LIMIT</div>
+        <div class="anno-text">Approach your ceiling</div>
+    </div>
+    <div class="hero-content">
+        <div class="eyebrow">Supremum Education</div>
+        <h1 class="hero-h1">
+            Reach your<br><em>academic ceiling.</em>
+        </h1>
+        <p class="hero-sub">
+            Expert one-on-one tutoring in Mathematics and Economics, from high school through university level. Based in Mississauga.
+        </p>
+        <div class="hero-actions">
+            <a href="#contact" class="btn-primary">Book free trial</a>
+            <a href="/about/" class="btn-text">
+                About the tutor
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+        </div>
+        <div class="hero-stats">
+            <div>
+                <div class="stat-num"><span data-count="300">300</span>+</div>
+                <div class="stat-label">Hours taught</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div>
+                <div class="stat-num">UofT</div>
+                <div class="stat-label">Teaching assistant</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div>
+                <div class="stat-num">$0</div>
+                <div class="stat-label">First session</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SUBJECT TICKER -->
+<div class="ticker-strip" aria-hidden="true">
+    <div class="ticker-track">
+        <span>Calculus</span><span class="tick-dot">·</span>
+        <span>IB Math AA</span><span class="tick-dot">·</span>
+        <span>Microeconomics</span><span class="tick-dot">·</span>
+        <span>Econometrics</span><span class="tick-dot">·</span>
+        <span>Trigonometry</span><span class="tick-dot">·</span>
+        <span>Game Theory</span><span class="tick-dot">·</span>
+        <span>AP Calculus BC</span><span class="tick-dot">·</span>
+        <span>Macroeconomics</span><span class="tick-dot">·</span>
+        <span>Functions</span><span class="tick-dot">·</span>
+        <span>IB Economics HL</span><span class="tick-dot">·</span>
+        <!-- duplicate for seamless loop -->
+        <span>Calculus</span><span class="tick-dot">·</span>
+        <span>IB Math AA</span><span class="tick-dot">·</span>
+        <span>Microeconomics</span><span class="tick-dot">·</span>
+        <span>Econometrics</span><span class="tick-dot">·</span>
+        <span>Trigonometry</span><span class="tick-dot">·</span>
+        <span>Game Theory</span><span class="tick-dot">·</span>
+        <span>AP Calculus BC</span><span class="tick-dot">·</span>
+        <span>Macroeconomics</span><span class="tick-dot">·</span>
+        <span>Functions</span><span class="tick-dot">·</span>
+        <span>IB Economics HL</span><span class="tick-dot">·</span>
+    </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+    <div class="section-inner">
+        <div class="section-tag reveal">Areas of expertise</div>
+        <h2 class="section-h2 reveal d1">Subjects I teach</h2>
+        <div class="services-grid">
+            <div class="service-card reveal">
+                <div class="service-level">High School · IB · AP</div>
+                <div class="service-name">Mathematics</div>
+                <p class="service-desc">Rigorous foundations in algebra, functions, and trigonometry — built to make higher mathematics feel intuitive, not intimidating.</p>
+                <div class="service-topics">
+                    <span class="topic-tag">Functions & Relations</span>
+                    <span class="topic-tag">Trigonometry</span>
+                    <span class="topic-tag">Algebra & Proof</span>
+                    <span class="topic-tag">IB Math AA / AI</span>
+                    <span class="topic-tag">AP Precalculus</span>
+                </div>
+            </div>
+            <div class="service-card reveal d1">
+                <div class="service-level">AP · IB · University</div>
+                <div class="service-name">Calculus</div>
+                <p class="service-desc">From limits and derivatives to multivariable calculus — conceptual clarity alongside the computational precision that exams demand.</p>
+                <div class="service-topics">
+                    <span class="topic-tag">Differential Calculus</span>
+                    <span class="topic-tag">Integral Calculus</span>
+                    <span class="topic-tag">Multivariable</span>
+                    <span class="topic-tag">Series & Sequences</span>
+                    <span class="topic-tag">AP Calculus AB / BC</span>
+                </div>
+            </div>
+            <div class="service-card reveal d2">
+                <div class="service-level">High School · IB</div>
+                <div class="service-name">Economics</div>
+                <p class="service-desc">Markets, price mechanisms, and macroeconomic policy explained with the intuition that textbooks often leave out.</p>
+                <div class="service-topics">
+                    <span class="topic-tag">Microeconomics</span>
+                    <span class="topic-tag">Macroeconomics</span>
+                    <span class="topic-tag">IB Economics HL / SL</span>
+                    <span class="topic-tag">Elasticity & Welfare</span>
+                </div>
+            </div>
+            <div class="service-card reveal d3">
+                <div class="service-level">University level</div>
+                <div class="service-name">University Economics</div>
+                <p class="service-desc">Intermediate theory, econometrics, and quantitative economics — taught by someone who actively studies and TAs the subject at UofT.</p>
+                <div class="service-topics">
+                    <span class="topic-tag">Intermediate Micro</span>
+                    <span class="topic-tag">Intermediate Macro</span>
+                    <span class="topic-tag">Econometrics</span>
+                    <span class="topic-tag">Game Theory</span>
+                    <span class="topic-tag">Financial Economics</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- VALUE PROPS -->
+<section id="value-props">
+    <div class="section-inner">
+        <div class="vp-grid">
+            <div class="vp-item reveal">
+                <div class="vp-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+                </div>
+                <div class="vp-text">
+                    <div class="vp-title">Always reachable by email</div>
+                    <div class="vp-desc">Students can reach out any time with quick questions — responses within 24 hours, always.</div>
+                </div>
+            </div>
+            <div class="vp-item reveal d1">
+                <div class="vp-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                </div>
+                <div class="vp-text">
+                    <div class="vp-title">UofT Teaching Assistant</div>
+                    <div class="vp-desc">Active TA at the University of Toronto — teaching experience that goes beyond just knowing the material.</div>
+                </div>
+            </div>
+            <div class="vp-item reveal d2">
+                <div class="vp-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+                </div>
+                <div class="vp-text">
+                    <div class="vp-title">Free first session</div>
+                    <div class="vp-desc">One full hour at no charge, no commitment required. See if it's a good fit before paying anything.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+    <div class="section-inner">
+        <div class="section-tag reveal">Testimonials</div>
+        <h2 class="section-h2 reveal d1">What students & parents say</h2>
+        <div class="testimonials-grid" style="grid-template-columns: repeat(2, 1fr);">
+            <div class="testi-card reveal">
+                <div class="testi-stars">★★★★★</div>
+                <p class="testi-text">Best ECO227 TA ever!</p>
+                <div class="testi-author">
+                    <div class="testi-avatar">S</div>
+                    <div>
+                        <div class="testi-name">Student</div>
+                        <div class="testi-role">ECO227 · University of Toronto</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testi-card reveal d1">
+                <div class="testi-stars">★★★★★</div>
+                <p class="testi-text">He is a good tutor/teacher, talks well and clear. Very knowledgeable in the subject that he's offering and very respectful, easy to deal with. Highly recommended!</p>
+                <div class="testi-author">
+                    <div class="testi-avatar">C</div>
+                    <div>
+                        <div class="testi-name">Cristina</div>
+                        <div class="testi-role">Parent of a Grade 10 student</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+    <!-- Curve finale — echoes the hero, drawn on scroll -->
+    <svg class="cta-visual reveal" viewBox="0 0 1200 400" fill="none"
+         xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" aria-hidden="true">
+        <line class="cta-ceiling" x1="0" y1="70" x2="1200" y2="70"
+              stroke="rgba(201,168,76,0.35)" stroke-width="1" stroke-dasharray="10 7"/>
+        <text x="24" y="56" fill="rgba(201,168,76,0.5)" font-family="Georgia,serif"
+              font-size="18" font-style="italic">L</text>
+        <path class="cta-path cta-glow-wide"
+              d="M-50 420 Q300 380 600 200 Q820 95 1250 74"
+              stroke="rgba(201,168,76,0.08)" stroke-width="14" fill="none" stroke-linecap="round"/>
+        <path class="cta-path"
+              d="M-50 420 Q300 380 600 200 Q820 95 1250 74"
+              stroke="rgba(201,168,76,0.45)" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <circle class="cta-end-dot" cx="1150" cy="77" r="5" fill="#C9A84C"/>
+    </svg>
+
+    <div class="cta-inner">
+        <div class="section-tag reveal" style="justify-content:center;">Get started</div>
+        <h2 class="section-h2 reveal d1" style="text-align:center;">Book your free trial session</h2>
+        <p class="reveal d2">One hour, no commitment. Let's see if we're a good fit.</p>
+        <div class="reveal d3">
+            <a href="mailto:hello@supremum.education" class="btn-gold">hello@supremum.education</a>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <img src="logo.png" alt="Supremum Education">
+    <div class="footer-right">
+        <div class="footer-links">
+            <a href="/">Home</a>
+            <a href="/about/">About</a>
+            <a href="/pricing/">Pricing</a>
+        </div>
+        <div class="footer-copy">© 2025 Supremum Education · Mississauga, Ontario</div>
+    </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>
