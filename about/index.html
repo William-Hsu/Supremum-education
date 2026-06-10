@@ -115,6 +115,22 @@
     </div>
 </footer>
 
+
+
+<!-- Scroll progress — travel the curve as you scroll -->
+<div id="curve-progress" aria-hidden="true">
+    <svg viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="4" y1="16" x2="116" y2="16" stroke="rgba(201,168,76,0.4)"
+              stroke-width="1" stroke-dasharray="5 4"/>
+        <text x="6" y="12" fill="rgba(201,168,76,0.55)" font-family="Georgia,serif"
+              font-size="9" font-style="italic">L</text>
+        <path id="progressPath" d="M8 76 Q30 70 60 45 Q85 26 114 18"
+              stroke="rgba(201,168,76,0.45)" stroke-width="1.5" fill="none"
+              stroke-linecap="round"/>
+        <circle id="progressDot" cx="8" cy="76" r="4" fill="#C9A84C"/>
+    </svg>
+</div>
+
 <script src="../main.js"></script>
 </body>
 </html>
