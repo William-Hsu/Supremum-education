@@ -9,9 +9,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Open Graph / social share -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="About | Supremum Education">
+    <meta property="og:description" content="Meet William Hsu — University of Toronto Teaching Assistant, 3.92 GPA, Dean's List Scholar, and founder of Supremum Education.">
+    <meta property="og:url" content="https://supremum.education/about/">
+    <meta property="og:image" content="https://supremum.education/og-image.png">
+    <meta property="og:site_name" content="Supremum Education">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="About | Supremum Education">
+    <meta name="twitter:description" content="Meet William Hsu — University of Toronto Teaching Assistant, 3.92 GPA, Dean's List Scholar, and founder of Supremum Education.">
+    <meta name="twitter:image" content="https://supremum.education/og-image.png">
+    <link rel="canonical" href="https://supremum.education/about/">
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
+<a href="#home" class="skip-link">Skip to content</a>
 
 <div id="scroll-progress"></div>
 
@@ -100,7 +113,7 @@
     <h2 class="section-h2 reveal d1" style="text-align:center;">Book a free trial session</h2>
     <p class="reveal d2">No commitment. One hour. See if it's a good fit.</p>
     <div class="reveal d3">
-        <a href="mailto:hello@supremum.education" class="btn-gold">hello@supremum.education</a>
+        <a href="mailto:hello@supremum.education?subject=Free%20Trial%20Session%20%E2%80%94%20Supremum%20Education&body=Hi%20William%2C%0A%0AI%27d%20like%20to%20book%20a%20free%20trial%20session.%0A%0AStudent%20name%3A%20%0ASubject%2Fcourse%3A%20%0AGrade%20or%20year%3A%20%0AA%20few%20times%20that%20work%3A%20%0A%0AThanks%21" class="btn-gold">hello@supremum.education</a>
     </div>
 </section>
 
@@ -112,7 +125,8 @@
             <a href="/about/">About</a>
             <a href="/pricing/">Pricing</a>
         </div>
-        <div class="footer-copy">© 2025 Supremum Education · Mississauga, Ontario</div>
+        <div class="footer-math">∀ student, ∃ a ceiling worth reaching.</div>
+        <div class="footer-copy">© 2026 Supremum Education · Mississauga, Ontario</div>
     </div>
 </footer>
 
@@ -120,20 +134,16 @@
 
 
 
-<!-- Curve spine — full-width weave, ends at Get Started -->
+<!-- Curve spine — route-aware line, path computed from real layout -->
 <div id="curve-spine" aria-hidden="true">
-    <svg width="100%" height="100%" viewBox="0 0 100 1000" preserveAspectRatio="none"
-         fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path class="spine-glow"
-              d="M50 5 C95 90 5 170 50 250 C95 330 5 410 50 490 C95 570 5 650 50 730 C92 805 12 880 50 995"
-              stroke="rgba(201,168,76,0.08)" stroke-width="9" fill="none"
-              stroke-linecap="round" vector-effect="non-scaling-stroke"/>
-        <path id="spinePath"
-              d="M50 5 C95 90 5 170 50 250 C95 330 5 410 50 490 C95 570 5 650 50 730 C92 805 12 880 50 995"
-              stroke="rgba(201,168,76,0.35)" stroke-width="2" fill="none"
-              stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+    <svg id="spineSvg" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="spine-glow" d=""
+              stroke="rgba(201,168,76,0.08)" stroke-width="9" fill="none" stroke-linecap="round"/>
+        <path id="spinePath" d=""
+              stroke="rgba(201,168,76,0.4)" stroke-width="2" fill="none" stroke-linecap="round"/>
     </svg>
     <div id="spineDotEl"></div>
+</div>
 </div>
 
 <script src="../main.js"></script>
